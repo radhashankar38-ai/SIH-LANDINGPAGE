@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NER-LIS | North-Eastern Landslide Intelligence System</title>
+    <meta name="description" content="AI-Powered Geotechnical Early Warning and Multi-Hazard Slope Failure Monitoring System for the North-Eastern Region of India.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='12,2 2,22 22,22' stroke='%23f59e0b' stroke-width='2' fill='%23050c08'/><circle cx='12' cy='18' r='2' fill='%23f59e0b'/></svg>">
+</head>
+<body>
+
+    <!-- ===== FIXED BACKGROUND CANVAS (Full natural brightness, 0% dimming, scroll-driven) ===== -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- ===== MINIMAL STREAMLINED NAVBAR ===== -->
+    <header id="navbar">
+        <div class="nav-inner">
+            <a href="#section-hero" class="nav-logo">
+                <div class="logo-icon-wrap">
+                    <svg viewBox="0 0 28 28" fill="none" width="18" height="18">
+                        <polygon points="14,2 2,26 26,26" stroke="#f59e0b" stroke-width="2.2" fill="rgba(245,158,11,0.15)"/>
+                        <line x1="14" y1="10" x2="14" y2="18" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="14" cy="22" r="1.8" fill="#f59e0b"/>
+                    </svg>
+                </div>
+                <span class="logo-title">NER-LIS</span>
+                <span class="nav-live-pill"><span class="live-dot"></span>LIVE</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="#section-hero">Overview</a>
+                <a href="#section-states">8-State Grid</a>
+                <a href="#section-sim">Simulator</a>
+                <a href="#section-sensors">Sensors</a>
+                <a href="#section-tech">AI Core</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="http://localhost:3000/" class="btn-portal-pill" title="Open Command Center">
+                    <span>PORTAL</span>
+                    <span class="btn-portal-arrow">➔</span>
+                </a>
+                <button id="btn-drill" class="btn-drill-pill" title="Trigger Simulation Drill">
+                    <span class="drill-dot"></span>DRILL
+                </button>
+                <button id="btn-sound" class="btn-sound-pill" title="Toggle Audio FX (M)" aria-label="Toggle Audio">
+                    <span id="sound-icon">🔇</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Click/Drag Scrubber Line -->
+    <div id="scrubber-track" class="scrubber-track" title="Click or drag to scrub through landslide timeline">
+        <div id="scroll-progress" class="scrubber-fill"></div>
+        <div id="scrubber-tooltip" class="scrubber-tooltip">FRAME 02 • STABLE BASELINE</div>
+    </div>
+
+    <!-- EMERGENCY BANNER -->
+    <div id="emergency-banner" class="emergency-banner hidden">
+        <div class="eb-inner">
+            <span>🚨</span>
+            <span class="eb-text">AUTONOMOUS EMERGENCY OVERRIDE — CATASTROPHIC ROCKFALL DETACHMENT — NH-10 TEESTA CORRIDOR BARRICADED — EVACUATION PROTOCOL ACTIVE</span>
+            <button id="btn-dismiss">✕ DISMISS</button>
+        </div>
+    </div>
+
+    <!-- ===================================================
+         SECTION 1: HERO (Pure, Spacious, Radiant Mountain Backdrop)
+         =================================================== -->
+    <section id="section-hero" class="s-hero">
+        <div class="hero-content" id="hero-content">
+            <div class="hero-chip"><span class="chip-dot"></span>NORTH-EASTERN REGION // AUTONOMOUS AI MONITORING</div>
+            <h1 class="hero-title">Geotechnical<br><span class="title-grad">Landslide Intelligence</span></h1>
+            <p class="hero-sub">High-altitude InSAR interferometry, borehole inclinometer telemetry, and AI predictive kinematics — monitoring slope failure across the Eastern Himalayas.</p>
+            <div class="hero-actions">
+                <a href="http://localhost:3000/" class="btn-hero-portal" id="btn-open-portal" title="Open Landslide Intelligence Portal">
+                    <span>OPEN PORTAL</span>
+                    <span class="portal-arrow">➔</span>
+                </a>
+            </div>
+            <div class="scroll-cue">
+                <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+                <span>SCROLL OR DRAG TOP BAR TO SCRUB</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 2: 8-STATE MATRIX
+         =================================================== -->
+    <section id="section-states" class="s-content">
+        <div class="container">
+            <div class="section-head reveal">
+                <div class="section-badge">SURVEILLANCE GRID</div>
+                <h2>North-Eastern Region 8-State Risk Matrix</h2>
+                <p>Click any state or use filters to inspect live geotechnical telemetry, borehole clusters, and automated civil protection advisories.</p>
+            </div>
+
+            <!-- Quick Filter Bar -->
+            <div class="state-filters reveal">
+                <button class="sf-btn active" data-filter="all">ALL STATES (8)</button>
+                <button class="sf-btn" data-filter="high">HIGH RISK (4)</button>
+                <button class="sf-btn" data-filter="med">ELEVATED (2)</button>
+                <button class="sf-btn" data-filter="safe">MONITORED (2)</button>
+            </div>
+
+            <div class="state-layout">
+                <div class="state-list reveal" id="state-list">
+                    <button class="state-btn active" data-state="sikkim" data-level="high"><span class="sb-code">SK</span><span class="sb-name">Sikkim</span><span class="risk-pill high">HIGH RISK</span></button>
+                    <button class="state-btn" data-state="arunachal" data-level="high"><span class="sb-code">AR</span><span class="sb-name">Arunachal Pradesh</span><span class="risk-pill high">HIGH RISK</span></button>
+                    <button class="state-btn" data-state="meghalaya" data-level="med"><span class="sb-code">ML</span><span class="sb-name">Meghalaya</span><span class="risk-pill med">ELEVATED</span></button>
+                    <button class="state-btn" data-state="assam" data-level="med"><span class="sb-code">AS</span><span class="sb-name">Assam Hills</span><span class="risk-pill med">ELEVATED</span></button>
+                    <button class="state-btn" data-state="mizoram" data-level="high"><span class="sb-code">MZ</span><span class="sb-name">Mizoram</span><span class="risk-pill high">HIGH RISK</span></button>
+                    <button class="state-btn" data-state="manipur" data-level="safe"><span class="sb-code">MN</span><span class="sb-name">Manipur</span><span class="risk-pill low">MODERATE</span></button>
+                    <button class="state-btn" data-state="nagaland" data-level="high"><span class="sb-code">NL</span><span class="sb-name">Nagaland</span><span class="risk-pill high">HIGH RISK</span></button>
+                    <button class="state-btn" data-state="tripura" data-level="safe"><span class="sb-code">TR</span><span class="sb-name">Tripura</span><span class="risk-pill safe">LOW RISK</span></button>
+                </div>
+                <div class="state-detail glass reveal" id="state-detail">
+                    <div class="sd-header">
+                        <div>
+                            <div class="sd-tag" id="sd-tag">SIKKIM HIMALAYA // NH-10 AXIS</div>
+                            <h3 id="sd-title">North Sikkim &amp; Teesta Basin Corridor</h3>
+                        </div>
+                        <div class="sd-level high" id="sd-level">⚠ LEVEL 3 ORANGE</div>
+                    </div>
+                    <div class="sd-metrics">
+                        <div class="sd-metric"><span class="sm-k">24H RAINFALL</span><span class="sm-v red" id="sd-rain">184.2 mm</span><span class="sm-sub red" id="sd-rain-sub">▲ 42% Above Threshold</span></div>
+                        <div class="sd-metric"><span class="sm-k">IOT SENSORS</span><span class="sm-v green" id="sd-sensors">342 Nodes</span><span class="sm-sub green">● 99.4% Health</span></div>
+                        <div class="sd-metric"><span class="sm-k">VULN. ZONES</span><span class="sm-v amber" id="sd-zones">14 Active</span><span class="sm-sub amber">Mangan, Chungthang</span></div>
+                        <div class="sd-metric"><span class="sm-k">ADVISORY</span><span class="sm-v red" id="sd-adv-level">EVAC READY</span><span class="sm-sub">Protocol Standby</span></div>
+                    </div>
+                    <div class="sd-advisory">
+                        <div class="adv-title">📢 AUTOMATED GEOTECHNICAL ADVISORY</div>
+                        <p id="sd-advisory">Extreme soil saturation detected across Chungthang-Lachen highway slopes. Heavy freight restricted on NH-10. Geotechnical crews on standby in Mangan district headquarters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 3: SLOPE SIMULATOR
+         =================================================== -->
+    <section id="section-sim" class="s-content">
+        <div class="container">
+            <div class="section-head reveal">
+                <div class="section-badge">PHYSICS ENGINE</div>
+                <h2>Interactive Geotechnical Slope Simulator</h2>
+                <p>Adjust environmental parameters or click presets to compute real-time Factor of Safety using Mohr-Coulomb shear criteria.</p>
+            </div>
+
+            <div class="sim-card glass reveal">
+                <!-- Interactive Simulation Presets -->
+                <div class="sim-presets-bar">
+                    <span class="sp-lbl">⚡ ONE-CLICK SCENARIO PRESETS:</span>
+                    <button class="sp-btn" data-preset="monsoon">🌧️ Cloudburst Storm</button>
+                    <button class="sp-btn" data-preset="seismic">💥 Severe Earthquake</button>
+                    <button class="sp-btn" data-preset="stable">⛰️ Bedrock Granite</button>
+                </div>
+
+                <div class="sim-layout">
+                    <div class="sim-controls">
+                        <div class="sim-group">
+                            <div class="sim-lbl"><label>24H Rainfall (mm/day)</label><span class="sim-val" id="v-rain">120 mm</span></div>
+                            <input type="range" class="sim-slider" id="s-rain" min="0" max="350" value="120" step="5">
+                            <div class="sim-scale"><span>0 Dry</span><span>175 Monsoon</span><span>350 Cloudburst</span></div>
+                        </div>
+                        <div class="sim-group">
+                            <div class="sim-lbl"><label>Slope Incline (°)</label><span class="sim-val" id="v-slope">48°</span></div>
+                            <input type="range" class="sim-slider" id="s-slope" min="15" max="75" value="48" step="1">
+                            <div class="sim-scale"><span>15° Gentle</span><span>45° Steep</span><span>75° Cliff</span></div>
+                        </div>
+                        <div class="sim-group">
+                            <div class="sim-lbl"><label>Seismic PGA (g)</label><span class="sim-val" id="v-pga">0.12 g</span></div>
+                            <input type="range" class="sim-slider" id="s-pga" min="0" max="0.5" value="0.12" step="0.01">
+                            <div class="sim-scale"><span>0.0g Quiet</span><span>0.25g Moderate</span><span>0.5g Severe</span></div>
+                        </div>
+                        <div class="sim-group">
+                            <label class="sim-select-label">Bedrock Lithology</label>
+                            <select id="s-rock" class="sim-select">
+                                <option value="gneiss" selected>Fractured Granite Gneiss (c'=28kPa, φ=34°)</option>
+                                <option value="schist">Mica Schist &amp; Phyllite (c'=18kPa, φ=26°)</option>
+                                <option value="alluvium">Colluvial Alluvium (c'=8kPa, φ=20°)</option>
+                                <option value="limestone">Dolomitic Limestone (c'=45kPa, φ=42°)</option>
+                            </select>
+                        </div>
+                        <div class="sim-group">
+                            <div class="sim-lbl"><label>Vegetation Cover</label><span class="sim-val" id="v-veg">Dense Forest</span></div>
+                            <input type="range" class="sim-slider" id="s-veg" min="0" max="3" value="2" step="1">
+                            <div class="sim-scale"><span>Bare</span><span>Sparse</span><span>Moderate</span><span>Dense</span></div>
+                        </div>
+                    </div>
+                    <div class="sim-result">
+                        <div class="sim-fos-display">
+                            <div class="sim-fos-label">FACTOR OF SAFETY</div>
+                            <div class="sim-fos-num" id="sim-fos-num">1.42</div>
+                            <div class="sim-fos-state" id="sim-fos-state">STABLE CONDITIONS</div>
+                        </div>
+                        <canvas id="sim-gauge" width="200" height="118"></canvas>
+                        <div class="sim-breakdown">
+                            <div class="sbd-row"><span>Cohesion Resistance</span><span id="sbd-cohesion">28.0 kPa</span></div>
+                            <div class="sbd-row"><span>Friction Resistance</span><span id="sbd-friction">31.4 kN/m²</span></div>
+                            <div class="sbd-row"><span>Pore Water Pressure</span><span id="sbd-pore">42.1 kPa</span></div>
+                            <div class="sbd-row"><span>Seismic Destabilisation</span><span id="sbd-seismic">−5.8 kN/m²</span></div>
+                            <div class="sbd-row"><span>Root Cohesion Bonus</span><span id="sbd-root">+12.0 kPa</span></div>
+                        </div>
+                        <button class="sim-reset" id="sim-reset">↺ RESET DEFAULTS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 4: SENSOR NETWORK (With Live Waveforms)
+         =================================================== -->
+    <section id="section-sensors" class="s-content">
+        <div class="container">
+            <div class="section-head reveal">
+                <div class="section-badge">IOT SENSOR ARRAY</div>
+                <h2>Real-Time Sensor Network Telemetry</h2>
+                <p>Autonomous monitoring stations streaming real-time weather metrics, subterranean soil moisture, and satellite radar interferometry.</p>
+            </div>
+            <div class="sensor-grid">
+                <!-- 1. WEATHER -->
+                <div class="sensor-card glass reveal" data-sensor="weather">
+                    <div class="sc-head">
+                        <div class="sc-icon">🌧️</div>
+                        <div class="sc-live"><span class="live-dot"></span><span class="sc-val" id="sv-weather">24.8 mm/hr</span></div>
+                    </div>
+                    <div class="sc-name">Automated Weather Net</div>
+                    <canvas class="sc-sparkline" id="spark-weather" width="280" height="44"></canvas>
+                    <p class="sc-desc">Dense AWS meteorological network providing real-time rainfall intensity, temperature gradients, and cloudburst triggers.</p>
+                    <div class="sc-stats"><div><span>Stations</span><span>312 Nodes</span></div><div><span>Interval</span><span>5 min</span></div><div><span>Accuracy</span><span>±0.2 mm</span></div></div>
+                </div>
+
+                <!-- 2. SOIL MOISTURE -->
+                <div class="sensor-card glass reveal" data-sensor="soil">
+                    <div class="sc-head">
+                        <div class="sc-icon">💧</div>
+                        <div class="sc-live"><span class="live-dot"></span><span class="sc-val" id="sv-soil">43.1 kPa</span></div>
+                    </div>
+                    <div class="sc-name">Soil Moisture &amp; Saturation</div>
+                    <canvas class="sc-sparkline" id="spark-soil" width="280" height="44"></canvas>
+                    <p class="sc-desc">Vibrating-wire piezometers and subterranean TDR moisture probes monitoring volumetric water content and shear pore pressure.</p>
+                    <div class="sc-stats"><div><span>Sensors</span><span>684 Nodes</span></div><div><span>Depth</span><span>0.5–15 m</span></div><div><span>Precision</span><span>±0.1 kPa</span></div></div>
+                </div>
+
+                <!-- 3. SATELLITE -->
+                <div class="sensor-card glass reveal" data-sensor="satellite">
+                    <div class="sc-head">
+                        <div class="sc-icon">📡</div>
+                        <div class="sc-live"><span class="live-dot"></span><span class="sc-val" id="sv-satellite">0.021 mm/day</span></div>
+                    </div>
+                    <div class="sc-name">InSAR Satellite Radar</div>
+                    <canvas class="sc-sparkline" id="spark-satellite" width="280" height="44"></canvas>
+                    <p class="sc-desc">Sentinel-1A/B radar interferometry providing millimeter-precision surface displacement tracking across 260,000 km².</p>
+                    <div class="sc-stats"><div><span>Revisit</span><span>6 days</span></div><div><span>Resolution</span><span>5×20 m</span></div><div><span>Coverage</span><span>260K km²</span></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 5: AI TECHNOLOGY
+         =================================================== -->
+    <section id="section-tech" class="s-content">
+        <div class="container">
+            <div class="section-head reveal">
+                <div class="section-badge">AI CORE</div>
+                <h2>Intelligence Platform Architecture</h2>
+                <p>A multi-layered AI stack combining deep learning, physics simulation, and real-time data fusion for slope stability forecasting.</p>
+            </div>
+            <div class="tech-grid">
+                <!-- 01: GNN -->
+                <div class="tech-card glass reveal" data-tech="gnn">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">01</span>
+                            <span class="tc-icon">🕸️</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-gnn">99.4% AUC</span></div>
+                    </div>
+                    <h3>Graph Neural Network Slope Topology</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-1" width="280" height="42"></canvas>
+                    <p>Heterogeneous GNN encodes spatial relationships between geological units, drainage networks, and structural discontinuities for topology-aware risk propagation.</p>
+                    <div class="tc-stats">
+                        <div><span>Nodes</span><span id="ts-gnn-nodes">14.2K</span></div>
+                        <div><span>Inference</span><span id="ts-gnn-lat">3.8 ms</span></div>
+                        <div><span>Accuracy</span><span id="ts-gnn-acc">99.4%</span></div>
+                    </div>
+                    <div class="tc-tags"><span>PyTorch Geometric</span><span>Heterogeneous GNN</span><span>Graph Attention</span></div>
+                </div>
+
+                <!-- 02: PINO -->
+                <div class="tech-card glass reveal" data-tech="pino">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">02</span>
+                            <span class="tc-icon">⚛️</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-pino">0.003 Loss</span></div>
+                    </div>
+                    <h3>Physics-Informed Neural Operator</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-2" width="280" height="42"></canvas>
+                    <p>PINO integrates Mohr-Coulomb shear mechanics directly into neural network loss functions, guaranteeing geotechnically-valid stability predictions.</p>
+                    <div class="tc-stats">
+                        <div><span>PDE Loss</span><span>0.0031</span></div>
+                        <div><span>Speedup</span><span>450×</span></div>
+                        <div><span>Mechanics</span><span>Mohr-Coulomb</span></div>
+                    </div>
+                    <div class="tc-tags"><span>Physics-Informed NN</span><span>Mohr-Coulomb</span><span>FEniCS</span></div>
+                </div>
+
+                <!-- 03: CASCADE -->
+                <div class="tech-card glass reveal" data-tech="cascade">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">03</span>
+                            <span class="tc-icon">🌊</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-cascade">5-Tier Joint</span></div>
+                    </div>
+                    <h3>Multi-Hazard Cascade Prediction</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-3" width="280" height="42"></canvas>
+                    <p>Bayesian belief network models cascading failures: landslide → debris flow → river damming → GLOF → downstream flood, computing joint probability distributions.</p>
+                    <div class="tc-stats">
+                        <div><span>Chains</span><span>5 Tiers</span></div>
+                        <div><span>MCMC</span><span>50K Runs</span></div>
+                        <div><span>Confidence</span><span>99.8%</span></div>
+                    </div>
+                    <div class="tc-tags"><span>Bayesian Networks</span><span>Cascade Modelling</span><span>MCMC</span></div>
+                </div>
+
+                <!-- 04: EDGE AI -->
+                <div class="tech-card glass reveal" data-tech="edge">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">04</span>
+                            <span class="tc-icon">⚡</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-edge">&lt; 8.0s Broadcast</span></div>
+                    </div>
+                    <h3>Edge AI Autonomous Warning Gateway</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-4" width="280" height="42"></canvas>
+                    <p>NVIDIA Jetson-powered edge nodes running compressed inference models — autonomous emergency broadcasts within 8 seconds, even without cloud connectivity.</p>
+                    <div class="tc-stats">
+                        <div><span>Hardware</span><span>Jetson Orin</span></div>
+                        <div><span>Offline Sync</span><span>Autonomous</span></div>
+                        <div><span>Power</span><span>12W Solar</span></div>
+                    </div>
+                    <div class="tc-tags"><span>NVIDIA Jetson</span><span>Edge Inference</span><span>MQTT</span></div>
+                </div>
+
+                <!-- 05: PSInSAR -->
+                <div class="tech-card glass reveal" data-tech="insar">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">05</span>
+                            <span class="tc-icon">🛰️</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-insar">±1.2 mm Precision</span></div>
+                    </div>
+                    <h3>PSInSAR Multi-Satellite Fusion</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-5" width="280" height="42"></canvas>
+                    <p>Persistent Scatterer InSAR pipeline fusing Sentinel-1, ALOS-2, and COSMO-SkyMed streams for all-weather, day-night displacement monitoring.</p>
+                    <div class="tc-stats">
+                        <div><span>Fleet</span><span>3 Fleets</span></div>
+                        <div><span>Coherence</span><span>γ &gt; 0.82</span></div>
+                        <div><span>Precision</span><span>±1.2 mm</span></div>
+                    </div>
+                    <div class="tc-tags"><span>PSInSAR</span><span>SNAP Toolbox</span><span>StaMPS</span></div>
+                </div>
+
+                <!-- 06: DIGITAL TWIN -->
+                <div class="tech-card glass reveal" data-tech="twin">
+                    <div class="tc-head">
+                        <div class="tc-lead">
+                            <span class="tc-num">06</span>
+                            <span class="tc-icon">🗺️</span>
+                        </div>
+                        <div class="tc-live"><span class="live-dot"></span><span class="tc-val" id="tv-twin">1.2s Reroute</span></div>
+                    </div>
+                    <h3>Digital Twin Evacuation Routing</h3>
+                    <canvas class="tc-sparkline" id="spark-tech-6" width="280" height="42"></canvas>
+                    <p>Real-time 3D digital twin of NER road networks enables automated evacuation route optimization under active landslide conditions.</p>
+                    <div class="tc-stats">
+                        <div><span>Corridors</span><span>NH-10 &amp; 27</span></div>
+                        <div><span>Reroute</span><span>&lt; 1.2s</span></div>
+                        <div><span>GIS Layers</span><span>38 Active</span></div>
+                    </div>
+                    <div class="tc-tags"><span>Digital Twin</span><span>Graph Pathfinding</span><span>GIS Integration</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <!-- ===== COMPACT MINIMAL MODERN FOOTER ===== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-compact-main">
+                <div class="fcm-brand">
+                    <a href="#section-hero" class="fcm-logo" title="NER-LIS Home">
+                        <svg viewBox="0 0 28 28" fill="none" width="16" height="16">
+                            <polygon points="14,2 2,26 26,26" stroke="#f59e0b" stroke-width="2.2" fill="rgba(245,158,11,0.15)"/>
+                            <circle cx="14" cy="20" r="2" fill="#f59e0b"/>
+                        </svg>
+                        <span>NER-LIS</span>
+                    </a>
+                    <a href="https://www.nerdrr.gov.in/" target="_blank" rel="noopener" class="fcm-nerdrr" title="Official Further Info: North Eastern Regional Disaster Risk Reduction">
+                        <span>NER-DRR.GOV.IN</span>
+                        <span class="fcm-arrow">↗</span>
+                    </a>
+                </div>
+
+                <nav class="fcm-nav">
+                    <a href="#section-hero">Overview</a>
+                    <a href="#section-states">8-State Grid</a>
+                    <a href="#section-sim">Simulator</a>
+                    <a href="#section-sensors">Sensors</a>
+                    <a href="#section-tech">AI Core</a>
+                    <span class="fcm-sep">•</span>
+                    <a href="https://www.nerdrr.gov.in/" target="_blank" rel="noopener" class="fcm-link-accent" title="NER-DRR Official Portal">Further Info ↗</a>
+                    <a href="https://ndma.gov.in" target="_blank" rel="noopener">NDMA ↗</a>
+                    <a href="https://gsi.gov.in/" target="_blank" rel="noopener">GSI ↗</a>
+                    <a href="http://localhost:3000/" target="_blank" rel="noopener">Portal ➔</a>
+                    <span class="fcm-sep">•</span>
+                    <a href="#emergency-banner" id="ft-drill" class="fcm-drill"><span class="fcm-dot"></span>Drill</a>
+                    <a href="#navbar" id="ft-sound" title="Toggle Audio FX">🔊</a>
+                    <a href="#section-hero" class="fcm-top" title="Back to top">Top ↑</a>
+                </nav>
+            </div>
+
+            <div class="footer-compact-bottom">
+                <span>© 2026 NER-LIS // National Disaster Management Authority • Eastern Himalayas</span>
+                <span class="fcb-right">
+                    <span class="live-dot-mini"></span>
+                    <span id="footer-time">—</span>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

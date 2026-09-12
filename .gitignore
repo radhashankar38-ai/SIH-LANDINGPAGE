@@ -1,0 +1,7 @@
+# Raw uncompressed PNG frames (runtime web engine uses optimized frames_jpg/)
+frames/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
