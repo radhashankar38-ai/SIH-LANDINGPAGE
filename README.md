@@ -55,7 +55,7 @@ Open [http://localhost:8000/](http://localhost:8000/) in your web browser.
 - **NER-DRR (North Eastern Regional Disaster Risk Reduction)**: [https://www.nerdrr.gov.in/](https://www.nerdrr.gov.in/)
 - **National Disaster Management Authority (NDMA)**: [https://ndma.gov.in/](https://ndma.gov.in/)
 - **Geological Survey of India (GSI)**: [https://gsi.gov.in/](https://gsi.gov.in/)
-- **Operational Command Center Portal**: `http://localhost:3000/`
+- **Operational Command Center Portal**: [https://sihapplication-neon.vercel.app/](https://sihapplication-neon.vercel.app/)
 
 ---
 

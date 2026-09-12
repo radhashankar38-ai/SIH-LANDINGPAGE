@@ -969,6 +969,9 @@
     document.getElementById('btn-open-portal')?.addEventListener('click', () => {
         playTickSound(880);
     });
+    document.querySelector('.btn-portal-pill')?.addEventListener('click', () => {
+        playTickSound(880);
+    });
     document.getElementById('btn-dismiss')?.addEventListener('click', () => {
         if (!eb) return;
         eb.classList.remove('visible');
